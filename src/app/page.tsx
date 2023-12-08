@@ -1,7 +1,7 @@
 import PostCard from '@/components/PostCard';
 import { db } from './db';
 
-// DUDA: un server component solo puede interactuar asi de rapido con una api creada aqui mismo en nextjs, eso lo tengo que probar
+// DUDA: un server component solo puede interactuar asi de rapido con una api creada aqui mismo en nextjs, eso lo tengo que probar con otra api que tenga como la de invitame.mx o la de kidden
 
 // NOTE: se supone que aqui estamos usando un server component por eso podemos interacturar directo haciendo peticiones a la base de datos
 // NOTE: se supone en los que son client components se debe usar ReactQuery
