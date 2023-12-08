@@ -1,9 +1,12 @@
 'use client';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-
 // types
 import { FormInputPost } from '@/types';
+// requests
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Tag } from '@prisma/client';
 
 interface FormPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -17,6 +20,21 @@ const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
   const { register, handleSubmit } = useForm<FormInputPost>();
 
   // esto se usa como una funcion que le pasas al useForm, para yo no hacer el usesatate, manejo de eventos individuales etc
+
+  // fetch list tags
+
+  // REVIEW usando este hook de la libreria se puede ahorrar todos los useState y useEffect para traer las queries y loa loading, solo se necesita la funcion de la llamada a la api
+
+  // NOTE usando el tRCP aunque es mas pedo las respuestas ya te llegan tipadas, aqui se tiene que tipar la respuesta usando en este caso el mismo modelo de prisma como tipo
+
+  // Por ejemplo aqui usando el isLoading nos evita mucho codigo de mandar un hook que te mande si esta cargando la data
+  const { data: dataTags, isLoading } = useQuery<Tag[]>({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      const response = await axios.get('/api/tags');
+      return response.data;
+    },
+  });
 
   return (
     <form
@@ -41,8 +59,13 @@ const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
         <option disabled selected>
           Select Tags
         </option>
-        <option>Han Solo</option>
-        <option>Greedo</option>
+        {isLoading
+          ? 'loading...'
+          : dataTags?.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
       </select>
       <button type="submit" className="btn btn-primary w-full max-w-lg">
         {isEditing ? 'Update' : 'Create'}
