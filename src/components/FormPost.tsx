@@ -11,13 +11,19 @@ import { Tag } from '@prisma/client';
 interface FormPostProps {
   submit: SubmitHandler<FormInputPost>;
   isEditing?: boolean;
+  initialValue?: FormInputPost;
 }
 
-const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
+const FormPost: FC<FormPostProps> = ({ submit, isEditing, initialValue }) => {
   // doc de useForm https://www.react-hook-form.com/get-started/#Applyvalidation
 
   // typar la respuestas del hook
-  const { register, handleSubmit } = useForm<FormInputPost>();
+  // con este hook tambien se le pueden dar vlaores iniciales al formulario, lo cual facilita mucho para cargar los edits
+  // solo con que los valores traigan el mismo nombre que se puso en los register los initial value
+
+  const { register, handleSubmit } = useForm<FormInputPost>({
+    defaultValues: initialValue,
+  });
 
   // esto se usa como una funcion que le pasas al useForm, para yo no hacer el usesatate, manejo de eventos individuales etc
 
