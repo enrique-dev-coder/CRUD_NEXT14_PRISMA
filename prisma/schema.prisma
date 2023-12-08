@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+// NOTE la idea es que con prisma puedes manejar tu base de datos directo aqui en una app de next js
+// NOTE se supone asi quitas  la necesidad de hacer una REST API que maneje por ti los datos
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+
+
+model Tag{
+  id String @id @default(cuid())
+  name String @db.VarChar(100)
+  // relacion
+  // una taga puede estar en una lista de posts
+  Post Post[]
+}
+
+model Post{
+  id String @id @default(cuid())
+  title String @db.VarChar(225)
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tagId String
+  tag Tag @relation(fields: [tagId],references: [id])
+}
